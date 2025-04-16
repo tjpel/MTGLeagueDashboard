@@ -1,0 +1,4 @@
+plotly
+pandas
+google-api-python-client
+tomllib
