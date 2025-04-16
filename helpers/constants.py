@@ -35,3 +35,8 @@ PLACEMENT = {
     'Third Place': 3,
     'Fourth Place': 4
 }
+
+CUTE_BRUTE_COLORS = {
+    "Cute": "#FFC5D3",
+    "Brute": "#12410F"
+}

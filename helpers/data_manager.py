@@ -55,6 +55,9 @@ class DataManager():
 
         placements_by_player = pd.DataFrame(data=player_stats).T
         placements_by_player["Average Placement"] = placements_by_player["Total Points"] / placements_by_player["Games Played"]
+        placements_by_player = placements_by_player.merge(player_cmd, left_on=placements_by_player.index, right_on="Player")[
+            ["Player", "Team", "Total Points", "Games Played", "Average Placement"]
+        ].set_index("Player", drop=True)
         self.data["Placements by Player"] = placements_by_player
 
     def get_data(self, data_identifier):
@@ -71,4 +74,3 @@ def get_data_manager():
         data_manager = DataManager()
 
     return data_manager
-    
