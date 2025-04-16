@@ -1,6 +1,7 @@
 from googleapiclient.discovery import build
 import pandas as pd
 import tomllib
+import streamlit as st
 
 import helpers.constants as c
 
@@ -12,10 +13,12 @@ class SheetsAPI():
     api_key = None
 
     def __init__(self):
+        """
         with open(".streamlit/secrets.toml", "rb") as file:
             secrets = tomllib.load(file)
+        """
 
-        self.api_key = secrets['sheets_api']
+        self.api_key = st.secrets['sheets_api']
 
     def authenticate_sheets(api_key):
         return build('sheets', 'v4', developerKey=api_key).spreadsheets()
