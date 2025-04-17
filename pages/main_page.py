@@ -18,7 +18,7 @@ team_viz = st.selectbox(
     "Visualization",
     [
         "Pie",
-        #"Box",
+        "Box",
     ]
 )
 cute_placements = get_subgroup_placement("Cute", "Team", True, False)
@@ -55,12 +55,56 @@ match team_viz:
             'Team': ['Brute'] * sum(brute_placements)
         })
 
-        # Convert to DataFrame
+        # Combine data
         temp_df = pd.concat([cute_df, brute_df], ignore_index=True)
 
-        # Create box plot
-        fig = px.box(temp_df, x='Team', y='Placement', points='all', color='Team', color_discrete_map=c.CUTE_BRUTE_COLORS)
-        fig.update_yaxes(autorange='reversed', title='Placement')  # 1st is better than 4th
+        # Create base box plot
+        fig = px.box(
+            temp_df,
+            x='Team',
+            y='Placement',
+            points='all',
+            color='Team',
+            color_discrete_map=c.CUTE_BRUTE_COLORS,
+        )
+
+        # Calculate mean placement for each team
+        mean_placements = temp_df.groupby('Team')['Placement'].mean()
+
+        # Map team names to x-axis positions (depends on px.box internal ordering)
+        team_order = temp_df['Team'].unique().tolist()
+        x_shift = 0.2  # optional tweak to help center the line over the box
+
+        for team in team_order:
+            x_position = team_order.index(team)
+            mean_val = mean_placements[team]
+
+            # Add mean line for each team
+            fig.add_shape(
+                type="line",
+                x0=x_position - 0.3,
+                x1=x_position + 0.3,
+                y0=mean_val,
+                y1=mean_val,
+                line=dict(color="white", width=2, dash="dot"),
+                xref='x',
+                yref='y'
+            )
+
+            # Optional: Add text label for the mean
+            fig.add_annotation(
+                x=team,
+                y=mean_val,
+                text=f"Mean: {mean_val:.2f}",
+                showarrow=False,
+                yshift=10,
+                font=dict(color="white", size=10)
+            )
+
+        # Reverse y-axis (1st is best)
+        fig.update_yaxes(autorange='reversed', title='Placement')
+
+        # Show the figure (replace with st.plotly_chart if using Streamlit)
         st.plotly_chart(fig)
 
 st.header("Current Standings")

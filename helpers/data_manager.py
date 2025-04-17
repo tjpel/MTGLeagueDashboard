@@ -39,6 +39,7 @@ class DataManager():
     def __init__(self):
         self.sheets = SheetsAPI()
         #TODO: Turn this into api (sheets.get_placements())
+        #self.data["Placements by Game"] = self.sheets.get_placements()
         self.data["Placements by Game"] = pd.read_csv("player_standings_ex.csv")
 
         player_cmd = pd.read_csv("data/player-cmd.csv")
