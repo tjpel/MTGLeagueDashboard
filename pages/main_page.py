@@ -25,9 +25,9 @@ cute_placements = get_subgroup_placement("Cute", "Team", True, False)
 brute_placements = get_subgroup_placement("Brute", "Team", True, False)
 match team_viz:
     case "Pie":
-        cute_total = (2 * cute_placements[1]) + (3 * cute_placements[2]) + (4 * cute_placements[3])
+        cute_total = (1 * cute_placements[0]) + (2 * cute_placements[1]) + (3 * cute_placements[2]) + (4 * cute_placements[3])
         cute_avg = cute_total / sum(cute_placements)
-        brute_total = (2 * brute_placements[1]) + (3 * brute_placements[2]) + (4 * brute_placements[3])
+        brute_total = (1 * brute_placements[0]) + (2 * brute_placements[1]) + (3 * brute_placements[2]) + (4 * brute_placements[3])
         brute_avg = brute_total / sum(brute_placements)
         temp_df = pd.DataFrame({"Team": ["Cute", "Brute"], "Average Placement": [cute_avg, brute_avg]})
         temp_df["Performance"] = 1 / temp_df["Average Placement"]
