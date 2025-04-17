@@ -2,3 +2,5 @@ streamlit
 plotly
 pandas
 google-api-python-client
+scryton
+asyncio
