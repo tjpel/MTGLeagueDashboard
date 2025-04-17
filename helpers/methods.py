@@ -54,7 +54,7 @@ def get_player_subgroup(subgroup: str, descriminator: str, exact: bool, negate: 
         if negate:
             return player_cmd[player_cmd[descriminator] != subgroup]["Player"].tolist()
         else:
-            return player_cmd[player_cmd[descriminator] != subgroup]["Player"].tolist()
+            return player_cmd[player_cmd[descriminator] == subgroup]["Player"].tolist()
     else:
         if negate:
             return player_cmd[player_cmd[descriminator].apply(lambda row: not is_subsequence(subgroup, row))]["Player"].tolist()
