@@ -1,5 +1,6 @@
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import streamlit as st
 import helpers.constants as c
 from helpers.data_manager import get_data_manager
@@ -10,6 +11,7 @@ PLACEMENT_ORDER = ["First Place", "Second Place", "Third Place", "Fourth Place"]
 #--------------------SITE--------------------------------------------------
 st.title("Midwest Vintage Toys Themed Commander League Season 4")
 st.caption("Created by Thomas Pelowitz")
+st.title("WARNING: This page is currently full of 'junk' data as we wait for the season to start! The 'Commander Information' section at the bottom is correct.")
 
 st.header("Cute vs. Brute")
 team_viz = st.selectbox(
@@ -62,9 +64,12 @@ match team_viz:
         st.plotly_chart(fig)
 
 st.header("Current Standings")
+#TODO add commander?
 standings = get_data_manager().get_data("Placements by Player").sort_values(by="Average Placement")
+commander_info = get_data_manager().get_data("Commander Info").set_index('Player')[["Commander"]]
+standings = standings.join(commander_info, on="Player", validate="1:1")
 standings[PLACEMENT_ORDER] = standings.apply(lambda x: pd.Series(get_overall_placements(x.name)), axis=1)
-standings = standings[["Team", "Average Placement", "Games Played"] + PLACEMENT_ORDER]
+standings = standings[["Commander", "Team", "Average Placement", "Games Played"] + PLACEMENT_ORDER]
 st.dataframe(standings, column_config={
     "Average Placement": st.column_config.NumberColumn("Average Placement", format="%.3f")
 })
@@ -83,10 +88,27 @@ commander_col = st.selectbox(
 
 temp_vc = get_data_manager().get_data("Commander Info")[[commander_col, "Team"]].value_counts().reset_index()
 temp_vc.columns = [commander_col, "Team", "Count"]
-fig = px.bar(temp_vc, x=commander_col, y='Count', color="Team", title=f'Distribution of {commander_col} Among Commanders', color_discrete_map = c.CUTE_BRUTE_COLORS)
-if commander_col != "Color Identity":
-    xaxis_dict = {'categoryorder':'category ascending'}
-else:
-     xaxis_dict={'categoryorder':'array', 'categoryarray': list(c.COLOR_SYM_TO_NAME.keys())}
-fig.update_layout(barmode='stack', xaxis=xaxis_dict, height=500)
-st.plotly_chart(fig) 
+temp_vc[commander_col] = temp_vc[commander_col].astype(str)
+temp_vc["Team"] = temp_vc["Team"].astype(str)
+
+pivot_df = temp_vc.pivot(index=commander_col, columns='Team', values='Count').fillna(0)
+
+# Create bars manually
+fig = go.Figure()
+
+for team in pivot_df.columns:
+    fig.add_trace(go.Bar(
+        x=pivot_df.index,
+        y=pivot_df[team],
+        name=team,
+        marker_color=c.CUTE_BRUTE_COLORS.get(team, None)  # safe fallback
+    ))
+
+fig.update_layout(
+    barmode='stack',
+    title=f'Distribution of {commander_col} Among Commanders',
+    xaxis_title=commander_col,
+    yaxis_title='Count',
+    height=500
+)
+st.plotly_chart(fig)

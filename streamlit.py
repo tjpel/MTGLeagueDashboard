@@ -15,9 +15,14 @@ pages = st.navigation([
         icon=":material/person:"
     ),
     st.Page(
+        "pages/commanders.py",
+        title="Commanders",
+        icon=":material/frame_person:"
+    ),
+    st.Page(
         "pages/page_info.py",
         title="About this Site",
         icon=":material/info:"
-    )
+    ),
 ])
 pages.run()

@@ -6,6 +6,8 @@ from plotly.subplots import make_subplots
 from helpers.methods import *
 from helpers.data_manager import get_data_manager
 
+st.title("WARNING: This page is currently full of 'junk' data as we wait for the season to start!")
+
 st.header("Player Lookup")
 player_name = st.selectbox(
     "Choose a player to view records for",
@@ -25,7 +27,6 @@ stats_subgroup = st.selectbox(
     [
         "Color Identity",
         "Cute or Brute",
-        "Other for Testing"
     ]
 )
 
