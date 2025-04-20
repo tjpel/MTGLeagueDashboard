@@ -20,12 +20,12 @@ class SheetsAPI():
 
         self.api_key = st.secrets['sheets_api']
 
-    def authenticate_sheets(api_key):
+    def authenticate_sheets(self, api_key):
         return build('sheets', 'v4', developerKey=api_key).spreadsheets()
 
-    def get_placements():
-        sheets = authenticate_sheets(api_key)
-        result = sheets.values().get(spreadsheetId=SPREADSHEET_ID, range=PLACEMENTS_RANGE).execute()
+    def get_placements(self):
+        sheets = self.authenticate_sheets(self.api_key)
+        result = sheets.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.PLACEMENTS_RANGE).execute()
         values = [value for value in result.get('values', []) if (value != [])]
 
         return pd.DataFrame(values[1:],columns=values[0])
@@ -38,13 +38,17 @@ class DataManager():
 
     def __init__(self):
         self.sheets = SheetsAPI()
-        #TODO: Turn this into api (sheets.get_placements())
-        #self.data["Placements by Game"] = self.sheets.get_placements()
-        self.data["Placements by Game"] = pd.read_csv("player_standings_ex.csv")
+        self.data["Placements by Game"] = self.sheets.get_placements()
+        #Backup from API - read a csv
+        #self.data["Placements by Game"] = pd.read_csv("player_standings_ex.csv")
 
         player_cmd = pd.read_csv("data/player-cmd.csv")
         player_cmd["Color Identity Textual"] = player_cmd["Color Identity"].apply(lambda x: c.COLOR_SYM_TO_NAME.get(x, x))
         self.data["Commander Info"] = player_cmd
+
+        #TODO read commanders with images
+        cmd_w_img = pd.read_csv("data\commanders_with_images.csv")
+        self.data["Commander with Images"] = cmd_w_img
 
         player_stats = {}
         for _, row in self.data["Placements by Game"].iterrows():
@@ -58,10 +62,11 @@ class DataManager():
                 player_stats[player]['Games Played'] += 1
 
         placements_by_player = pd.DataFrame(data=player_stats).T
-        placements_by_player["Average Placement"] = placements_by_player["Total Points"] / placements_by_player["Games Played"]
-        placements_by_player = placements_by_player.merge(player_cmd, left_on=placements_by_player.index, right_on="Player")[
-            ["Player", "Team", "Total Points", "Games Played", "Average Placement"]
-        ].set_index("Player", drop=True)
+        if not placements_by_player.empty:
+            placements_by_player["Average Placement"] = placements_by_player["Total Points"] / placements_by_player["Games Played"]
+            placements_by_player = placements_by_player.merge(player_cmd, left_on=placements_by_player.index, right_on="Player")[
+                ["Player", "Team", "Total Points", "Games Played", "Average Placement"]
+            ].set_index("Player", drop=True)
         self.data["Placements by Player"] = placements_by_player
 
     def get_data(self, data_identifier):

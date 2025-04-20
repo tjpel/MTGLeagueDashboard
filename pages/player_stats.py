@@ -6,21 +6,23 @@ from plotly.subplots import make_subplots
 from helpers.methods import *
 from helpers.data_manager import get_data_manager
 
-st.title("WARNING: This page is currently full of 'junk' data as we wait for the season to start!")
 
 st.header("Player Lookup")
 player_name = st.selectbox(
     "Choose a player to view records for",
-    get_data_manager().get_data("Commander Info")["Player"].unique()
+    get_data_manager().get_data("Commander Info").sort_values(by="Player")["Player"].unique()
 )
 overall_placements = get_overall_placements(player_name)
-overall_placements_df = color_w_l = pd.DataFrame(data={
-    "Placements": ["First", "Second", "Third", "Fourth"],
-    "Value": overall_placements}
-)
-fig = px.pie(overall_placements_df, values="Value", names="Placements")
-fig.update_traces(textinfo='percent+label', textposition='inside', showlegend=False)
-st.plotly_chart(fig)
+if sum(overall_placements) > 0:
+    overall_placements_df = pd.DataFrame(data={
+        "Placements": ["First", "Second", "Third", "Fourth"],
+        "Value": overall_placements}
+    )
+    fig = px.pie(overall_placements_df, values="Value", names="Placements")
+    fig.update_traces(textinfo='percent+label', textposition='inside', showlegend=False)
+    st.plotly_chart(fig)
+else:
+    st.write("This player hasn't played any games yet!")
 
 stats_subgroup = st.selectbox(
     "Choose a category to see how you match up against it!",
