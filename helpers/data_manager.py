@@ -42,12 +42,12 @@ class DataManager():
         #Backup from API - read a csv
         #self.data["Placements by Game"] = pd.read_csv("player_standings_ex.csv")
 
-        player_cmd = pd.read_csv("data/player-cmd.csv")
+        player_cmd = pd.read_csv(r"data/player-cmd.csv")
         player_cmd["Color Identity Textual"] = player_cmd["Color Identity"].apply(lambda x: c.COLOR_SYM_TO_NAME.get(x, x))
         self.data["Commander Info"] = player_cmd
 
         #TODO read commanders with images
-        cmd_w_img = pd.read_csv("data\commanders_with_images.csv")
+        cmd_w_img = pd.read_csv(r"data/commanders_with_images.csv")
         self.data["Commander with Images"] = cmd_w_img
 
         player_stats = {}
