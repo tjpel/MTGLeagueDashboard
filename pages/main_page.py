@@ -3,10 +3,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 import helpers.constants as c
-from helpers.data_manager import get_data_manager
+from helpers.data_manager import get_data_manager, refresh_data
 from helpers.methods import *
 
 PLACEMENT_ORDER = ["First Place", "Second Place", "Third Place", "Fourth Place"]
+refresh_data()
 
 #--------------------SITE--------------------------------------------------
 st.title("Midwest Vintage Toys Themed Commander League Season 4")

@@ -83,3 +83,8 @@ def get_data_manager():
         data_manager = DataManager()
 
     return data_manager
+
+def refresh_data():
+    global data_manager
+
+    data_manager = DataManager()

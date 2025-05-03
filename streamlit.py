@@ -1,5 +1,4 @@
 import streamlit as st
-
 PLACEMENT_ORDER = ["First Place", "Second Place", "Third Place", "Fourth Place"]
 
 #--------------------DEFINE PAGES------------------------------------------

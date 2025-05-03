@@ -34,5 +34,5 @@ st.dataframe(
     use_container_width = True,
     hide_index=True,
     row_height = 175,
-    height = 5808
+    height = 5987
 )
