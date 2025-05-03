@@ -29,9 +29,7 @@ brute_total = (1 * brute_placements[0]) + (2 * brute_placements[1]) + (3 * brute
 if cute_total > 0 and brute_total > 0:
     match team_viz:
         case "Pie":
-            cute_total = (1 * cute_placements[0]) + (2 * cute_placements[1]) + (3 * cute_placements[2]) + (4 * cute_placements[3])
             cute_avg = cute_total / sum(cute_placements)
-            brute_total = (1 * brute_placements[0]) + (2 * brute_placements[1]) + (3 * brute_placements[2]) + (4 * brute_placements[3])
             brute_avg = brute_total / sum(brute_placements)
             temp_df = pd.DataFrame({"Team": ["Cute", "Brute"], "Average Placement": [cute_avg, brute_avg]})
             temp_df["Performance"] = 1 / temp_df["Average Placement"]
@@ -63,7 +61,7 @@ if cute_total > 0 and brute_total > 0:
             temp_df = pd.concat([cute_df, brute_df], ignore_index=True)
 
             # Create base box plot
-            fig = px.box(
+            fig = px.box( #TODO: Violin?
                 temp_df,
                 x='Team',
                 y='Placement',

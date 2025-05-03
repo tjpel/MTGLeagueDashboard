@@ -24,6 +24,7 @@ class SheetsAPI():
         return build('sheets', 'v4', developerKey=api_key).spreadsheets()
 
     def get_placements(self):
+        print("Fetching placements from spreadsheet...")
         sheets = self.authenticate_sheets(self.api_key)
         result = sheets.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.PLACEMENTS_RANGE).execute()
         values = [value for value in result.get('values', []) if (value != [])]
