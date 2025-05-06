@@ -114,11 +114,12 @@ else:
 st.header("Current Standings")
 standings = get_data_manager().get_data("Placements by Player")
 if not standings.empty:
-    standings = standings.sort_values(by="Average Placement")
+
     commander_info = get_data_manager().get_data("Commander Info").set_index('Player')[["Commander"]]
     standings = standings.join(commander_info, on="Player", validate="1:1")
     standings[PLACEMENT_ORDER] = standings.apply(lambda x: pd.Series(get_overall_placements(x.name)), axis=1)
     standings = standings[["Commander", "Team", "Average Placement", "Games Played"] + PLACEMENT_ORDER]
+    standings = standings.sort_values(by=["Average Placement", "Games Played"], ascending=[True, False])
     st.dataframe(standings, column_config={
         "Average Placement": st.column_config.NumberColumn("Average Placement", format="%.3f")
     })
