@@ -13,7 +13,30 @@ refresh_data()
 st.title("Midwest Vintage Toys Themed Commander League Season 4")
 st.caption("Created by Thomas Pelowitz")
 
-st.header("Cute vs. Brute")
+st.header("Current Standings")
+standings = get_data_manager().get_data("Placements by Player")
+if not standings.empty:
+
+    commander_info = get_data_manager().get_data("Commander Info").set_index('Player')[["Commander"]]
+    standings = standings.join(commander_info, on="Player", validate="1:1")
+    standings[PLACEMENT_ORDER] = standings.apply(lambda x: pd.Series(get_overall_placements(x.name)), axis=1)
+    standings = standings[["Commander", "Team", "Average Placement", "Games Played"] + PLACEMENT_ORDER]
+    standings = standings.sort_values(by=["Average Placement", "Games Played", "First Place", "Second Place", "Third Place"], ascending=[True, False, False, False, False])
+    
+    # Add checkbox to filter players with more than 10 games
+    filter_active_players = st.checkbox("Show only players with 10 or more games completed", value=False)
+    
+    # Apply filter if checkbox is checked
+    if filter_active_players:
+        standings = standings[standings["Games Played"] >= 10]
+    
+    st.dataframe(standings, column_config={
+        "Average Placement": st.column_config.NumberColumn("Average Placement", format="%.3f")
+    })
+else:
+    st.write("Standings will be available once games begin!")
+
+st.header("Cute vs. Brute: Who's Winning?")
 team_viz = st.selectbox(
     "Visualization",
     [
@@ -111,20 +134,7 @@ if cute_total > 0 and brute_total > 0:
 else:
     st.write("Visualizations will be available once games begin!")
 
-st.header("Current Standings")
-standings = get_data_manager().get_data("Placements by Player")
-if not standings.empty:
 
-    commander_info = get_data_manager().get_data("Commander Info").set_index('Player')[["Commander"]]
-    standings = standings.join(commander_info, on="Player", validate="1:1")
-    standings[PLACEMENT_ORDER] = standings.apply(lambda x: pd.Series(get_overall_placements(x.name)), axis=1)
-    standings = standings[["Commander", "Team", "Average Placement", "Games Played"] + PLACEMENT_ORDER]
-    standings = standings.sort_values(by=["Average Placement", "Games Played"], ascending=[True, False])
-    st.dataframe(standings, column_config={
-        "Average Placement": st.column_config.NumberColumn("Average Placement", format="%.3f")
-    })
-else:
-    st.write("Standings will be available once games begin!")
 st.header("Commander Information")
 st.write("See information about Commanders and ...")
 commander_col = st.selectbox(
