@@ -10,7 +10,7 @@ PLACEMENT_ORDER = ["First Place", "Second Place", "Third Place", "Fourth Place"]
 refresh_data()
 
 #--------------------SITE--------------------------------------------------
-st.title("Midwest Vintage Toys Themed Commander League Season 4")
+st.title("Midwest Vintage Toys Themed Commander League Season 5")
 st.caption("Created by Thomas Pelowitz")
 
 st.header("Current Standings")
@@ -36,7 +36,7 @@ if not standings.empty:
 else:
     st.write("Standings will be available once games begin!")
 
-st.header("Cute vs. Brute: Who's Winning?")
+st.header("Hero vs. Villan: Who's Winning?")
 team_viz = st.selectbox(
     "Visualization",
     [
@@ -44,44 +44,44 @@ team_viz = st.selectbox(
         "Box",
     ]
 )
-cute_placements = get_subgroup_placement("Cute", "Team", True, False)
-brute_placements = get_subgroup_placement("Brute", "Team", True, False)
-cute_total = (1 * cute_placements[0]) + (2 * cute_placements[1]) + (3 * cute_placements[2]) + (4 * cute_placements[3])
-brute_total = (1 * brute_placements[0]) + (2 * brute_placements[1]) + (3 * brute_placements[2]) + (4 * brute_placements[3])
+hero_placements = get_subgroup_placement("Hero", "Team", True, False)
+villan_placements = get_subgroup_placement("Villan", "Team", True, False)
+hero_total = (1 * hero_placements[0]) + (2 * hero_placements[1]) + (3 * hero_placements[2]) + (4 * hero_placements[3])
+villan_total = (1 * villan_placements[0]) + (2 * villan_placements[1]) + (3 * villan_placements[2]) + (4 * villan_placements[3])
 
-if cute_total > 0 and brute_total > 0:
+if hero_total > 0 and villan_total > 0:
     match team_viz:
         case "Pie":
-            cute_avg = cute_total / sum(cute_placements)
-            brute_avg = brute_total / sum(brute_placements)
-            temp_df = pd.DataFrame({"Team": ["Cute", "Brute"], "Average Placement": [cute_avg, brute_avg]})
+            hero_avg = hero_total / sum(hero_placements)
+            villan_avg = villan_total / sum(villan_placements)
+            temp_df = pd.DataFrame({"Team": ["Hero", "Villan"], "Average Placement": [hero_avg, villan_avg]})
             temp_df["Performance"] = 1 / temp_df["Average Placement"]
-            fig = px.pie(temp_df, values="Performance", names="Team", color="Team", color_discrete_map=c.CUTE_BRUTE_COLORS)
+            fig = px.pie(temp_df, values="Performance", names="Team", color="Team", color_discrete_map=c.HERO_VILLAN_COLORS)
             fig.update_traces(textposition='inside', textinfo='label')
             st.plotly_chart(fig)
             st.caption('Pie pieces sized by "Performance", or 1 / Average Team Placement. This is done to account for lower placements being better.')
         case "Box":
-            cute_df = pd.DataFrame({
+            hero_df = pd.DataFrame({
                 'Placement': (
-                    [1] * cute_placements[0] +
-                    [2] * cute_placements[1] +
-                    [3] * cute_placements[2] +
-                    [4] * cute_placements[3]
+                    [1] * hero_placements[0] +
+                    [2] * hero_placements[1] +
+                    [3] * hero_placements[2] +
+                    [4] * hero_placements[3]
                 ),
-                'Team': ['Cute'] * sum(cute_placements)
+                'Team': ['Hero'] * sum(hero_placements)
             })
-            brute_df = pd.DataFrame({
+            villan_df = pd.DataFrame({
                 'Placement': (
-                    [1] * brute_placements[0] +
-                    [2] * brute_placements[1] +
-                    [3] * brute_placements[2] +
-                    [4] * brute_placements[3]
+                    [1] * villan_placements[0] +
+                    [2] * villan_placements[1] +
+                    [3] * villan_placements[2] +
+                    [4] * villan_placements[3]
                 ),
-                'Team': ['Brute'] * sum(brute_placements)
+                'Team': ['Villan'] * sum(villan_placements)
             })
 
             # Combine data
-            temp_df = pd.concat([cute_df, brute_df], ignore_index=True)
+            temp_df = pd.concat([hero_df, villan_df], ignore_index=True)
 
             # Create base box plot
             fig = px.box( #TODO: Violin?
@@ -162,7 +162,7 @@ for team in pivot_df.columns:
         x=pivot_df.index,
         y=pivot_df[team],
         name=team,
-        marker_color=c.CUTE_BRUTE_COLORS.get(team, None)  # safe fallback
+        marker_color=c.HERO_VILLAN_COLORS.get(team, None)  # safe fallback
     ))
 
 fig.update_layout(

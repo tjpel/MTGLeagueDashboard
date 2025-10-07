@@ -47,7 +47,23 @@ class DataManager():
         player_cmd["Color Identity Textual"] = player_cmd["Color Identity"].apply(lambda x: c.COLOR_SYM_TO_NAME.get(x, x))
         self.data["Commander Info"] = player_cmd
 
-        #TODO read commanders with images
+        import os
+        if not os.path.exists("data/commanders_with_images.csv"):
+            import scrython
+            import time
+            player_cmd = self.data["Commander Info"]
+            images = []
+            for name in player_cmd["Commander"]:
+                time.sleep(0.01)
+                try:
+                    card = scrython.cards.Named(fuzzy=name)
+                    images.append(card.image_uris()["art_crop"])
+                except Exception as e:
+                    print(f"Error fetching {name}: {e}")
+                    images.append(None)
+            player_cmd_with_images = player_cmd.copy()
+            player_cmd_with_images["Image"] = images
+            player_cmd_with_images.to_csv("data/commanders_with_images.csv", index=False)
         cmd_w_img = pd.read_csv(r"data/commanders_with_images.csv")
         self.data["Commander with Images"] = cmd_w_img
 

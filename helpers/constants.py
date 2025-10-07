@@ -36,7 +36,7 @@ PLACEMENT = {
     'Fourth Place': 4
 }
 
-CUTE_BRUTE_COLORS = {
-    "Cute": "#FFC5D3",
-    "Brute": "#12410F"
+HERO_VILLAN_COLORS = {
+    "Hero": "#FFD700",
+    "Villan": "#4B0082"
 }
