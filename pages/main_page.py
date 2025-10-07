@@ -90,7 +90,7 @@ if hero_total > 0 and villan_total > 0:
                 y='Placement',
                 points='all',
                 color='Team',
-                color_discrete_map=c.CUTE_BRUTE_COLORS,
+                color_discrete_map=c.HERO_VILLAN_COLORS,
             )
 
             # Calculate mean placement for each team
