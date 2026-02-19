@@ -9,7 +9,7 @@ data_manager = None
 
 class SheetsAPI():
     SPREADSHEET_ID = '1LfM6l1_GJa_YnLOHmfb_jz2YaaABL7-_-l7gFgsUBeQ'
-    PLACEMENTS_RANGE = 'Form Responses 1!A1:E200'
+    PLACEMENTS_RANGE = 'Form Responses 1!A1:E1000'
     api_key = None
 
     def __init__(self):
@@ -29,7 +29,9 @@ class SheetsAPI():
         result = sheets.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.PLACEMENTS_RANGE).execute()
         values = [value for value in result.get('values', []) if (value != [])]
 
-        return pd.DataFrame(values[1:],columns=values[0])
+        out = pd.DataFrame(values[1:],columns=values[0])
+        #print(out.head())
+        return out
 
 
 class DataManager():
@@ -40,8 +42,6 @@ class DataManager():
     def __init__(self):
         self.sheets = SheetsAPI()
         self.data["Placements by Game"] = self.sheets.get_placements()
-        #Backup from API - read a csv
-        #self.data["Placements by Game"] = pd.read_csv("player_standings_ex.csv")
 
         player_cmd = pd.read_csv(r"data/player-cmd.csv")
         player_cmd["Color Identity Textual"] = player_cmd["Color Identity"].apply(lambda x: c.COLOR_SYM_TO_NAME.get(x, x))
@@ -82,7 +82,7 @@ class DataManager():
         if not placements_by_player.empty:
             placements_by_player["Average Placement"] = placements_by_player["Total Points"] / placements_by_player["Games Played"]
             placements_by_player = placements_by_player.merge(player_cmd, left_on=placements_by_player.index, right_on="Player")[
-                ["Player", "Team", "Total Points", "Games Played", "Average Placement"]
+                ["Player", "Total Points", "Games Played", "Average Placement"]
             ].set_index("Player", drop=True)
         self.data["Placements by Player"] = placements_by_player
 

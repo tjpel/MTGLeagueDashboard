@@ -28,7 +28,6 @@ stats_subgroup = st.selectbox(
     "Choose a category to see how you match up against it!",
     [
         "Color Identity",
-        "Cute or Brute",
     ]
 )
 
@@ -72,32 +71,6 @@ match stats_subgroup:
             st.plotly_chart(fig)
         else:
             st.write("This player hasn't played any games against those colors!")
-
-    case "Cute or Brute":
-        team_for_record = st.selectbox(
-            "Choose a team to see the player's record against it",
-            ["Cute", "Brute"]
-        )
-
-        team_record = get_player_record_against_subgroup(player_name, team_for_record, "Team", True, False)
-        if team_record != [0, 0]:
-            #TODO: Add context to pop-ups
-            fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "pie"}]])
-
-            team_w_l = pd.DataFrame(data={"Record": ["Win", "Loss"], "Value": team_record})
-            w_l_fig = go.Pie(labels=team_w_l["Record"], values=team_w_l["Value"], hole=.3, textinfo='label+percent')
-            fig.add_trace(w_l_fig, row=1, col=1)
-
-            team_placement = get_player_placement_against_subgroup(player_name, team_for_record, "Team", True, False)
-            team_placement_df = pd.DataFrame(data={"Placement": ["First", "Second", "Third", "Fourth"], "Value": team_placement})
-            placement_fig = go.Pie(labels=team_placement_df["Placement"], values=team_placement_df["Value"], hole=.3, textinfo='label+percent')
-            fig.add_trace(placement_fig, row=1, col=2)
-
-            fig.update_traces(showlegend=False)
-
-            st.plotly_chart(fig)
-        else:
-            st.write("This player hasn't played any games against that team!")
 
 
 
