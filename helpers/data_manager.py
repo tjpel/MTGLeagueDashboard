@@ -57,7 +57,14 @@ class DataManager():
                 time.sleep(0.01)
                 try:
                     card = scrython.cards.Named(fuzzy=name)
-                    images.append(card.image_uris()["art_crop"])
+                    # image_uris can be a method (older scrython) or a dict (newer/env-dependent); DFCs use card_faces
+                    raw_uris = getattr(card, "image_uris", None)
+                    uris = raw_uris() if callable(raw_uris) else raw_uris
+                    if not uris and getattr(card, "card_faces", None):
+                        face0 = card.card_faces[0]
+                        raw_uris = face0.get("image_uris") if isinstance(face0, dict) else getattr(face0, "image_uris", None)
+                        uris = raw_uris() if callable(raw_uris) else raw_uris
+                    images.append(uris.get("art_crop") if isinstance(uris, dict) else None)
                 except Exception as e:
                     print(f"Error fetching {name}: {e}")
                     images.append(None)
