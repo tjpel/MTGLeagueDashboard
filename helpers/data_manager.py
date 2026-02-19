@@ -9,7 +9,7 @@ data_manager = None
 
 class SheetsAPI():
     SPREADSHEET_ID = '1LfM6l1_GJa_YnLOHmfb_jz2YaaABL7-_-l7gFgsUBeQ'
-    PLACEMENTS_RANGE = 'Form Responses 1!A1:E1000'
+    PLACEMENTS_RANGE = 'Form Responses 1!A1:E200'
     api_key = None
 
     def __init__(self):
