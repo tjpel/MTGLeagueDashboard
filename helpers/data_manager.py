@@ -48,31 +48,18 @@ class DataManager():
         self.data["Commander Info"] = player_cmd
 
         import os
-        if not os.path.exists("data/commanders_with_images.csv"):
-            import scrython
-            import time
-            player_cmd = self.data["Commander Info"]
-            images = []
-            for name in player_cmd["Commander"]:
-                time.sleep(0.01)
-                try:
-                    card = scrython.cards.Named(fuzzy=name)
-                    # image_uris can be a method (older scrython) or a dict (newer/env-dependent); DFCs use card_faces
-                    raw_uris = getattr(card, "image_uris", None)
-                    uris = raw_uris() if callable(raw_uris) else raw_uris
-                    if not uris and getattr(card, "card_faces", None):
-                        face0 = card.card_faces[0]
-                        raw_uris = face0.get("image_uris") if isinstance(face0, dict) else getattr(face0, "image_uris", None)
-                        uris = raw_uris() if callable(raw_uris) else raw_uris
-                    images.append(uris.get("art_crop") if isinstance(uris, dict) else None)
-                except Exception as e:
-                    print(f"Error fetching {name}: {e}")
-                    images.append(None)
-            player_cmd_with_images = player_cmd.copy()
-            player_cmd_with_images["Image"] = images
-            player_cmd_with_images.to_csv("data/commanders_with_images.csv", index=False)
-        cmd_w_img = pd.read_csv(r"data/commanders_with_images.csv")
-        self.data["Commander with Images"] = cmd_w_img
+        csv_path = "data/commanders_with_images.csv"
+        player_cmd = self.data["Commander Info"]
+        if os.path.exists(csv_path):
+            cmd_w_img = pd.read_csv(csv_path)
+            cache = cmd_w_img[["Commander", "Image"]].drop_duplicates("Commander") if "Image" in cmd_w_img.columns else cmd_w_img[["Commander"]].drop_duplicates("Commander").assign(Image=None)
+            merged = player_cmd.merge(cache, on="Commander", how="left")
+            need_fetch = (merged["Image"].isna() | (merged["Image"].astype(str).str.strip().eq(""))).any()
+            if need_fetch:
+                merged = self._fetch_and_merge_commander_images(player_cmd, cmd_w_img, csv_path)
+            self.data["Commander with Images"] = merged
+        else:
+            self.data["Commander with Images"] = self._fetch_and_merge_commander_images(player_cmd, None, csv_path)
 
         player_stats = {}
         for _, row in self.data["Placements by Game"].iterrows():
@@ -92,6 +79,63 @@ class DataManager():
                 ["Player", "Total Points", "Games Played", "Average Placement"]
             ].set_index("Player", drop=True)
         self.data["Placements by Player"] = placements_by_player
+
+    def _fetch_and_merge_commander_images(self, player_cmd, existing_df, csv_path):
+        import asyncio
+        import time
+        try:
+            import scrython
+        except ImportError:
+            out = player_cmd.copy()
+            out["Image"] = None
+            out.to_csv(csv_path, index=False)
+            return out
+        # Scrython (aiohttp) needs an event loop; Streamlit runs in a thread that has none
+        try:
+            asyncio.get_event_loop()
+        except RuntimeError:
+            asyncio.set_event_loop(asyncio.new_event_loop())
+        commanders_to_fetch = list(player_cmd["Commander"].unique())
+        if existing_df is not None and "Image" in existing_df.columns:
+            filled = existing_df["Image"].notna() & existing_df["Image"].astype(str).str.strip().ne("")
+            have = set(existing_df.loc[filled, "Commander"].unique())
+            commanders_to_fetch = [x for x in commanders_to_fetch if x not in have]
+        if not commanders_to_fetch:
+            if existing_df is not None:
+                return player_cmd.merge(
+                    existing_df[["Commander", "Image"]].drop_duplicates("Commander"),
+                    on="Commander",
+                    how="left",
+                )
+            out = player_cmd.copy()
+            out["Image"] = None
+            return out
+        image_by_commander = {}
+        for name in commanders_to_fetch:
+            time.sleep(0.01)
+            try:
+                card = scrython.cards.Named(fuzzy=name)
+                raw_uris = getattr(card, "image_uris", None)
+                uris = raw_uris() if callable(raw_uris) else raw_uris
+                if not uris and getattr(card, "card_faces", None):
+                    face0 = card.card_faces[0]
+                    raw_uris = face0.get("image_uris") if isinstance(face0, dict) else getattr(face0, "image_uris", None)
+                    uris = raw_uris() if callable(raw_uris) else raw_uris
+                image_by_commander[name] = uris.get("art_crop") if isinstance(uris, dict) else None
+            except Exception as e:
+                print(f"Error fetching {name}: {e}")
+                image_by_commander[name] = None
+        if existing_df is not None:
+            cache = existing_df[["Commander", "Image"]].drop_duplicates("Commander")
+            url_map = cache.set_index("Commander")["Image"].to_dict()
+            url_map.update(image_by_commander)
+            out = player_cmd.copy()
+            out["Image"] = out["Commander"].map(url_map)
+        else:
+            out = player_cmd.copy()
+            out["Image"] = out["Commander"].map(image_by_commander)
+        out.to_csv(csv_path, index=False)
+        return out
 
     def get_data(self, data_identifier):
         return self.data.get(data_identifier, None).copy()

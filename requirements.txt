@@ -4,3 +4,4 @@ pandas
 google-api-python-client
 scrython
 asyncio
+scipy

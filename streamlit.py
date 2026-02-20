@@ -19,6 +19,11 @@ pages = st.navigation([
         icon=":material/frame_person:"
     ),
     st.Page(
+        "pages/statistical_analysis.py",
+        title="Statistical Analysis",
+        icon=":material/bar_chart:"
+    ),
+    st.Page(
         "pages/page_info.py",
         title="About this Site",
         icon=":material/info:"
