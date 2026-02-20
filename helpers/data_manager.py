@@ -28,9 +28,16 @@ class SheetsAPI():
         sheets = self.authenticate_sheets(self.api_key)
         result = sheets.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.PLACEMENTS_RANGE).execute()
         values = [value for value in result.get('values', []) if (value != [])]
-
-        out = pd.DataFrame(values[1:],columns=values[0])
-        #print(out.head())
+        if not values:
+            return pd.DataFrame(columns=["Timestamp", "First Place", "Second Place", "Third Place", "Fourth Place"])
+        headers = values[0]
+        n_cols = len(headers)
+        # Pad or trim each row so it has exactly n_cols cells (Sheets returns variable-length rows)
+        rows = []
+        for row in values[1:]:
+            padded = (list(row) + [""] * n_cols)[:n_cols]
+            rows.append(padded)
+        out = pd.DataFrame(rows, columns=headers)
         return out
 
 
