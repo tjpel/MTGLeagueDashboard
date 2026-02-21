@@ -133,11 +133,31 @@ else:
         st.metric("P-value", f"{kw_p:.4f}")
         st.caption(f"P-value interpretation: Since the p-value is {kw_p:.4f}, there is a {(100 * kw_p):.2f}% chance that the differences observed in average placement is due to random chance alone (that is to say, there is no impact of color identity on average placement).")
 
-    fig = px.box(
-        df_color,
+    # Mean and 90% CI (t-based) per color identity
+    ci_rows = []
+    for color in by_color[color_col]:
+        vals = df_color.loc[df_color[color_col] == color, "Average Placement"]
+        n = len(vals)
+        mean_placement = vals.mean()
+        if n >= 2:
+            sem = stats.sem(vals)
+            half_width = sem * stats.t.ppf(0.95, n - 1)
+        else:
+            half_width = float("nan")
+        ci_rows.append({
+            color_col: color,
+            "Mean placement": mean_placement,
+            "CI half-width (90%)": half_width,
+        })
+    ci_df = pd.DataFrame(ci_rows)
+
+    fig = px.bar(
+        ci_df,
         x=color_col,
-        y="Average Placement",
+        y="Mean placement",
         title="Average placement by color identity (lower is better)",
+        error_y="CI half-width (90%)" if ci_df["CI half-width (90%)"].notna().any() else None,
     )
+    fig.update_layout(yaxis_title="Mean placement (90% CI)")
     fig.update_xaxes(tickangle=-45)
     st.plotly_chart(fig)
