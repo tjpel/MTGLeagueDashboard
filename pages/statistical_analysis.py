@@ -158,6 +158,6 @@ else:
         title="Average placement by color identity (lower is better)",
         error_y="CI half-width (90%)" if ci_df["CI half-width (90%)"].notna().any() else None,
     )
-    fig.update_layout(yaxis_title="Mean placement (90% CI)")
+    fig.update_layout(yaxis_title="Mean placement (90% CI)", yaxis=dict(range=[0, 4]))
     fig.update_xaxes(tickangle=-45)
     st.plotly_chart(fig)
