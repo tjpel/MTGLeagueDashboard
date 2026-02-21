@@ -133,7 +133,7 @@ else:
         st.metric("P-value", f"{kw_p:.4f}")
         st.caption(f"P-value interpretation: Since the p-value is {kw_p:.4f}, there is a {(100 * kw_p):.2f}% chance that the differences observed in average placement is due to random chance alone (that is to say, there is no impact of color identity on average placement).")
 
-    # Mean and 90% CI (t-based) per color identity
+    # Mean and 90% CI (t-based) per color identity; CI clamped to [1, 4]
     ci_rows = []
     for color in by_color[color_col]:
         vals = df_color.loc[df_color[color_col] == color, "Average Placement"]
@@ -142,22 +142,38 @@ else:
         if n >= 2:
             sem = stats.sem(vals)
             half_width = sem * stats.t.ppf(0.95, n - 1)
+            lower = mean_placement - half_width
+            upper = mean_placement + half_width
+            lower_capped = max(1.0, lower)
+            upper_capped = min(4.0, upper)
+            ci_plus = upper_capped - mean_placement
+            ci_minus = mean_placement - lower_capped
         else:
-            half_width = float("nan")
+            ci_plus = 0.0
+            ci_minus = 0.0
         ci_rows.append({
             color_col: color,
             "Mean placement": mean_placement,
-            "CI half-width (90%)": half_width,
+            "CI plus": ci_plus,
+            "CI minus": ci_minus,
         })
     ci_df = pd.DataFrame(ci_rows)
+    has_ci = (ci_df["CI plus"] > 0) | (ci_df["CI minus"] > 0)
 
     fig = px.bar(
         ci_df,
         x=color_col,
         y="Mean placement",
         title="Average placement by color identity (lower is better)",
-        error_y="CI half-width (90%)" if ci_df["CI half-width (90%)"].notna().any() else None,
     )
+    if has_ci.any():
+        fig.update_traces(
+            error_y=dict(
+                type="data",
+                array=ci_df["CI plus"],
+                arrayminus=ci_df["CI minus"],
+            )
+        )
     fig.update_layout(yaxis_title="Mean placement (90% CI)", yaxis=dict(range=[0, 4]))
     fig.update_xaxes(tickangle=-45)
     st.plotly_chart(fig)
