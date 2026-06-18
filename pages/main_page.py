@@ -80,7 +80,7 @@ else:
 st.header("Commander Information")
 commander_col = st.selectbox(
     "Pick One",
-    ["CMC", "First Printing Set", "First Printing Year", "UB", "Non-standard Set"],
+    ["CMC", "First Printing Set", "First Printing Year", "UB", "Non-Standard Set"],
 )
 
 temp_vc = (

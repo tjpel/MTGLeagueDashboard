@@ -113,7 +113,7 @@ else:
 # ---- Binary predictors ----
 st.subheader("Binary Predictors vs Average Placement")
 
-binary_vars = ["UB", "Non-standard Set"]
+binary_vars = ["UB", "Non-Standard Set"]
 available_binary = [v for v in binary_vars if v in df.columns]
 
 if not available_binary:
