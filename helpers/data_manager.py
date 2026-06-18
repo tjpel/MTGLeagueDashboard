@@ -9,7 +9,7 @@ data_manager = None
 
 class SheetsAPI():
     SPREADSHEET_ID = '1LfM6l1_GJa_YnLOHmfb_jz2YaaABL7-_-l7gFgsUBeQ'
-    PLACEMENTS_RANGE = 'Form Responses 1!A1:E10000'
+    PLACEMENTS_RANGE = 'Form Responses 1!A332:E10000'
     api_key = None
 
     def __init__(self):
@@ -119,7 +119,7 @@ class DataManager():
             return out
         image_by_commander = {}
         for name in commanders_to_fetch:
-            time.sleep(0.01)
+            time.sleep(0.2)
             try:
                 card = scrython.cards.Named(fuzzy=name)
                 raw_uris = getattr(card, "image_uris", None)

@@ -12,11 +12,7 @@ def get_analysis_df():
     if placements.empty or commander_info.empty:
         return pd.DataFrame()
     placements = placements.reset_index()
-    return placements.merge(
-        commander_info,
-        on="Player",
-        how="inner",
-    )
+    return placements.merge(commander_info, on="Player", how="inner")
 
 
 st.header("Statistical Analysis")
@@ -45,22 +41,23 @@ df = df[df["Games Played"] >= min_games].copy()
 if len(df) < 2:
     st.info(
         "Very few or no games recorded yet, or too few players after filtering. "
-        "Results will become more meaningful as more games are played. Lower the minimum games filter or add more data."
+        "Results will become more meaningful as more games are played."
     )
     st.stop()
 
 if total_games < 4:
     st.caption("Early in the season — statistics will become more meaningful as more games are recorded.")
 
-# Ensure numeric for First Printing Year
 df["First Printing Year"] = pd.to_numeric(df["First Printing Year"], errors="coerce")
 
 n_players = len(df)
-st.write(f"**{n_players}** players included (min {min_games} games). "
-         "Results are exploratory when sample size is small.")
+st.write(
+    f"**{n_players}** players included (min {min_games} games). "
+    "Results are exploratory when sample size is small."
+)
 
-# ----- Section 1: Numeric correlations -----
-st.subheader("1. Numeric predictors vs average placement")
+# ---- Numeric correlations ----
+st.subheader("Numeric Predictors vs Average Placement")
 
 numeric_vars = ["CMC", "Games Played", "First Printing Year"]
 df_numeric = df[["Average Placement"] + numeric_vars].dropna()
@@ -76,8 +73,7 @@ else:
         if valid.sum() < 2:
             rows.append({"Variable": var, "Spearman r": None, "P-value": None})
             continue
-        x_vals = x[valid]
-        y_vals = y[valid]
+        x_vals, y_vals = x[valid], y[valid]
         if x_vals.nunique() < 2 or y_vals.nunique() < 2:
             rows.append({"Variable": var, "Spearman r": None, "P-value": None})
             continue
@@ -85,10 +81,14 @@ else:
         rows.append({"Variable": var, "Spearman r": round(r, 4), "P-value": round(p, 4)})
 
     corr_table = pd.DataFrame(rows)
-    st.dataframe(corr_table, column_config={
-        "Spearman r": st.column_config.NumberColumn("Spearman r", format="%.4f"),
-        "P-value": st.column_config.NumberColumn("P-value", format="%.4f"),
-    }, hide_index=True)
+    st.dataframe(
+        corr_table,
+        column_config={
+            "Spearman r": st.column_config.NumberColumn("Spearman r", format="%.4f"),
+            "P-value": st.column_config.NumberColumn("P-value", format="%.4f"),
+        },
+        hide_index=True,
+    )
     st.caption(
         "Negative r: higher value of the variable is associated with **better** (lower) average placement."
     )
@@ -97,83 +97,68 @@ else:
         plot_df = df_numeric[[var, "Average Placement"]].dropna()
         if len(plot_df) < 2:
             continue
-        fig = px.scatter(plot_df, x=var, y="Average Placement", trendline="ols")
+        fig = px.scatter(
+            plot_df,
+            x=var,
+            y="Average Placement",
+            trendline="ols",
+            template="plotly_dark",
+        )
         fig.update_layout(
             title=f"{var} vs Average Placement (lower is better)",
             yaxis_title="Average Placement",
         )
         st.plotly_chart(fig)
 
-# ----- Section 2: Color identity -----
-st.subheader("2. Color identity and average placement")
+# ---- Binary predictors ----
+st.subheader("Binary Predictors vs Average Placement")
 
-color_col = "Color Identity Textual"
-df_color = df[[color_col, "Average Placement"]].dropna()
-if df_color[color_col].nunique() < 2:
-    st.write("Need at least two color identities for comparison.")
+binary_vars = ["UB", "Non-standard Set"]
+available_binary = [v for v in binary_vars if v in df.columns]
+
+if not available_binary:
+    st.write("No binary predictor columns found in data.")
 else:
-    by_color = (
-        df_color.groupby(color_col, as_index=True)["Average Placement"]
-        .agg(Mean_placement="mean", Median_placement="median", Count="count")
-        .reset_index()
-    )
-    by_color = by_color.rename(columns={
-        "Mean_placement": "Mean placement",
-        "Median_placement": "Median placement",
-    })
-    st.dataframe(by_color, column_config={
-        "Mean placement": st.column_config.NumberColumn("Mean placement", format="%.3f"),
-        "Median placement": st.column_config.NumberColumn("Median placement", format="%.3f"),
-    }, hide_index=True)
+    for var in available_binary:
+        df_bin = df[[var, "Average Placement"]].dropna()
+        df_bin = df_bin[df_bin[var].isin(["Y", "N"])]
+        if df_bin[var].nunique() < 2:
+            st.write(f"Not enough variation in **{var}** for comparison yet.")
+            continue
 
-    groups = [df_color.loc[df_color[color_col] == g, "Average Placement"].values for g in by_color[color_col]]
-    if all(len(g) >= 1 for g in groups):
-        kw_stat, kw_p = stats.kruskal(*groups)
-        st.metric("Kruskal–Wallis H", f"{kw_stat:.3f}")
-        st.metric("P-value", f"{kw_p:.4f}")
-        st.caption(f"P-value interpretation: Since the p-value is {kw_p:.4f}, there is a {(100 * kw_p):.2f}% chance that the differences observed in average placement is due to random chance alone (that is to say, there is no impact of color identity on average placement).")
-
-    # Mean and 90% CI (t-based) per color identity; CI clamped to [1, 4]
-    ci_rows = []
-    for color in by_color[color_col]:
-        vals = df_color.loc[df_color[color_col] == color, "Average Placement"]
-        n = len(vals)
-        mean_placement = vals.mean()
-        if n >= 2:
-            sem = stats.sem(vals)
-            half_width = sem * stats.t.ppf(0.95, n - 1)
-            lower = mean_placement - half_width
-            upper = mean_placement + half_width
-            lower_capped = max(1.0, lower)
-            upper_capped = min(4.0, upper)
-            ci_plus = upper_capped - mean_placement
-            ci_minus = mean_placement - lower_capped
-        else:
-            ci_plus = 0.0
-            ci_minus = 0.0
-        ci_rows.append({
-            color_col: color,
-            "Mean placement": mean_placement,
-            "CI plus": ci_plus,
-            "CI minus": ci_minus,
-        })
-    ci_df = pd.DataFrame(ci_rows)
-    has_ci = (ci_df["CI plus"] > 0) | (ci_df["CI minus"] > 0)
-
-    fig = px.bar(
-        ci_df,
-        x=color_col,
-        y="Mean placement",
-        title="Average placement by color identity (lower is better)",
-    )
-    if has_ci.any():
-        fig.update_traces(
-            error_y=dict(
-                type="data",
-                array=ci_df["CI plus"],
-                arrayminus=ci_df["CI minus"],
-            )
+        summary = (
+            df_bin.groupby(var)["Average Placement"]
+            .agg(Mean="mean", Median="median", Count="count")
+            .reset_index()
+            .rename(columns={"Mean": "Mean Placement", "Median": "Median Placement"})
         )
-    fig.update_layout(yaxis_title="Mean placement (90% CI)", yaxis=dict(range=[0, 4]))
-    fig.update_xaxes(tickangle=-45)
-    st.plotly_chart(fig)
+
+        st.write(f"**{var}**")
+        st.dataframe(
+            summary,
+            column_config={
+                "Mean Placement": st.column_config.NumberColumn(format="%.3f"),
+                "Median Placement": st.column_config.NumberColumn(format="%.3f"),
+            },
+            hide_index=True,
+        )
+
+        y_vals = df_bin.loc[df_bin[var] == "Y", "Average Placement"]
+        n_vals = df_bin.loc[df_bin[var] == "N", "Average Placement"]
+        if len(y_vals) >= 1 and len(n_vals) >= 1 and (len(y_vals) + len(n_vals)) >= 3:
+            _, p_val = stats.mannwhitneyu(y_vals, n_vals, alternative="two-sided")
+            st.caption(
+                f"Mann-Whitney U p-value: {p_val:.4f} — {100*p_val:.1f}% chance the "
+                "difference is due to random variation."
+            )
+
+        fig = px.bar(
+            summary,
+            x=var,
+            y="Mean Placement",
+            color=var,
+            title=f"Mean Placement by {var} (lower is better)",
+            template="plotly_dark",
+        )
+        fig.update_layout(yaxis=dict(range=[0, 4]), showlegend=False)
+        st.plotly_chart(fig)
