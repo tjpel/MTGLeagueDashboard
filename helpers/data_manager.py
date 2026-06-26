@@ -9,6 +9,7 @@ data_manager = None
 
 class SheetsAPI():
     SPREADSHEET_ID = '1LfM6l1_GJa_YnLOHmfb_jz2YaaABL7-_-l7gFgsUBeQ'
+    HEADER = 'Form Responses 1!A1:E1'
     PLACEMENTS_RANGE = 'Form Responses 1!A332:E10000'
     api_key = None
 
@@ -26,18 +27,24 @@ class SheetsAPI():
     def get_placements(self):
         print("Fetching placements from spreadsheet...")
         sheets = self.authenticate_sheets(self.api_key)
+
+        header_result = sheets.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.HEADER).execute()
+        headers = header_result.get('values', [[]])[0]
+
         result = sheets.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.PLACEMENTS_RANGE).execute()
-        values = [value for value in result.get('values', []) if (value != [])]
+        values = [value for value in result.get('values', []) if value != []]
+
         if not values:
-            return pd.DataFrame(columns=["Timestamp", "First Place", "Second Place", "Third Place", "Fourth Place"])
-        headers = values[0]
+            return pd.DataFrame(columns=headers)
+
         n_cols = len(headers)
-        # Pad or trim each row so it has exactly n_cols cells (Sheets returns variable-length rows)
         rows = []
-        for row in values[1:]:
+        for row in values:
             padded = (list(row) + [""] * n_cols)[:n_cols]
             rows.append(padded)
+
         out = pd.DataFrame(rows, columns=headers)
+        print(out.head())
         return out
 
 
