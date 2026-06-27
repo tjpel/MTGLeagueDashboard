@@ -71,7 +71,6 @@ if not recent_games.empty:
     st.dataframe(
         recent_games[["Date"] + PLACEMENT_ORDER],
         hide_index=True,
-        use_container_width=True,
     )
 else:
     st.write("No games recorded yet!")
