@@ -9,8 +9,8 @@ data_manager = None
 
 class SheetsAPI():
     SPREADSHEET_ID = '1LfM6l1_GJa_YnLOHmfb_jz2YaaABL7-_-l7gFgsUBeQ'
-    HEADER = 'Form Responses 1!A1:E1'
-    PLACEMENTS_RANGE = 'Form Responses 1!A332:E10000'
+    HEADER = 'Form Responses 4!A1:E1'
+    PLACEMENTS_RANGE = 'Form Responses 4!A335:E10000'
     api_key = None
 
     def __init__(self):
@@ -33,6 +33,8 @@ class SheetsAPI():
 
         result = sheets.values().get(spreadsheetId=self.SPREADSHEET_ID, range=self.PLACEMENTS_RANGE).execute()
         values = [value for value in result.get('values', []) if value != []]
+        print(f"Raw values count: {len(values)}")
+        print(values[:3])
 
         if not values:
             return pd.DataFrame(columns=headers)
