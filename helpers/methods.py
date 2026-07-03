@@ -1,3 +1,4 @@
+import pandas as pd
 import helpers.constants as c
 from helpers.data_manager import get_data_manager
 
@@ -60,6 +61,23 @@ def get_player_subgroup(subgroup: str, descriminator: str, exact: bool, negate: 
             return player_cmd[player_cmd[descriminator].apply(lambda row: not is_subsequence(subgroup, row))]["Player"].tolist()
         else:
             return player_cmd[player_cmd[descriminator].apply(lambda row: is_subsequence(subgroup, row))]["Player"].tolist()
+
+def get_recent_games(games_df: pd.DataFrame, limit: int = 10) -> pd.DataFrame:
+    if games_df is None or games_df.empty:
+        return pd.DataFrame(columns=games_df.columns if isinstance(games_df, pd.DataFrame) else [])
+
+    recent_games = games_df.copy().reset_index(drop=True)
+    recent_games["Timestamp"] = pd.to_datetime(recent_games["Timestamp"], errors="coerce")
+    recent_games["_source_order"] = recent_games.index
+
+    recent_games = recent_games.sort_values(
+        by=["Timestamp", "_source_order"],
+        ascending=[False, False],
+        na_position="last",
+    )
+
+    return recent_games.head(limit).drop(columns=["_source_order"])
+
 
 def get_player_record_against_subgroup(player, player_group, group_name, exact, stringify):
     subgroup_players = get_player_subgroup(player_group, group_name, exact)
