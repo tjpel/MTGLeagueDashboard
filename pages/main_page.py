@@ -66,7 +66,7 @@ recent_games = get_data_manager().get_data("Placements by Game").head(15)
 if not recent_games.empty:
     recent_games = recent_games.copy()
     recent_games["Timestamp"] = pd.to_datetime(recent_games["Timestamp"], errors="coerce")
-    recent_games = recent_games.sort_values("Timestamp", ascending=False).head(10)
+    recent_games = recent_games.sort_values("Timestamp", ascending=True).head(10)
     recent_games["Date"] = recent_games["Timestamp"].dt.strftime("%b %d, %Y")
     st.dataframe(
         recent_games[["Date"] + PLACEMENT_ORDER],
