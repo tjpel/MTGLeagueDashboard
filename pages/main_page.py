@@ -4,7 +4,7 @@ import plotly.express as px
 import streamlit as st
 import helpers.constants as c
 from helpers.data_manager import get_data_manager, refresh_data
-from helpers.methods import get_overall_placements
+from helpers.methods import get_overall_placements, get_recent_games
 
 PLACEMENT_ORDER = ["First Place", "Second Place", "Third Place", "Fourth Place"]
 refresh_data()
@@ -65,11 +65,9 @@ st.image("imgs/season_7/issue_2.png", caption="Season 7, League Times Issue 2", 
 
 # ---- Recently Played Games ----
 st.header("Recently Played Games")
-recent_games = get_data_manager().get_data("Placements by Game").head(15)
+recent_games = get_recent_games(get_data_manager().get_data("Placements by Game"), limit=10)
 if not recent_games.empty:
     recent_games = recent_games.copy()
-    recent_games["Timestamp"] = pd.to_datetime(recent_games["Timestamp"], errors="coerce")
-    recent_games = recent_games.sort_values("Timestamp", ascending=False).head(10)
     recent_games["Date"] = recent_games["Timestamp"].dt.strftime("%b %d, %Y")
     st.dataframe(
         recent_games[["Date"] + PLACEMENT_ORDER],
