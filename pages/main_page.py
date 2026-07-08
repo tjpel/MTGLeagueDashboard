@@ -60,6 +60,9 @@ if not standings.empty:
 else:
     st.write("Standings will be available once games begin!")
 
+st.title("League Times")
+st.image("imgs/season_7/issue_2.png", caption="Season 7, League Times Issue 2", use_container_width=True)
+
 # ---- Recently Played Games ----
 st.header("Recently Played Games")
 recent_games = get_data_manager().get_data("Placements by Game").head(15)

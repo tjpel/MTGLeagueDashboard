@@ -24,6 +24,11 @@ pages = st.navigation([
         icon=":material/bar_chart:"
     ),
     st.Page(
+        "pages/old_league_times.py",
+        title="Old League Times",
+        icon=":material/newspaper:"
+    ),
+    st.Page(
         "pages/page_info.py",
         title="About this Site",
         icon=":material/info:"
