@@ -7,6 +7,8 @@ from helpers.data_manager import get_data_manager, refresh_data
 from helpers.methods import get_overall_placements, get_recent_games
 
 PLACEMENT_ORDER = ["First Place", "Second Place", "Third Place", "Fourth Place"]
+SEASON = 7
+CURRENT_ISSUE = 3
 refresh_data()
 
 st.title("Midwest Vintage Toys Themed Commander League Season 7")
@@ -61,7 +63,7 @@ else:
     st.write("Standings will be available once games begin!")
 
 st.title("League Times")
-st.image("imgs/season_7/issue_2.png", caption="Season 7, League Times Issue 2", use_container_width=True)
+st.image(f"imgs/season_{SEASON}/issue_{CURRENT_ISSUE}.png", caption=f"Season {SEASON}, League Times Issue {CURRENT_ISSUE}", use_container_width=True)
 
 # ---- Recently Played Games ----
 st.header("Recently Played Games")
