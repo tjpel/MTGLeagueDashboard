@@ -1,47 +1,56 @@
-Player,Commander,Color Identity,CMC,First Printing Set,First Printing Year,UB,Non-Standard Set
-Jason Egginton,Aerith Gainsborough,W,3,Final Fantasy,2025,Y,N
-Nathan Matthews,"Anafenza, Unyielding Lineage",W,3,Tarkir: Dragonstorm,2025,N,N
-Camden Egginton,Arni Brokenbrow,R,3,Kaldheim,2021,N,N
-Jake Scharpen,Arni Metalbrow,R,3,March of the Machines: The Aftermath,2023,N,N
-Madison Allred,"Chiss-Goria, Forge Tyrant",R,9,Phrexia: All Will Be One Commander,2023,N,Y
-Lorelei Riska,"Donal, Herald of Wings",U,4,Crimson Vow Commander,2021,N,Y
-Josh Nova,"Drana, Liberator of Malakir",B,3,Battle for Zendikar,2015,N,N
-Scott Stroh,Emissary Green,G,5,Ravnica: Clue Edition,2024,N,Y
-Pablo Luna,"Fain, the Broker",B,3,Commander 2021,2021,N,Y
-Natalie Rosin,"Fandaniel, Telophoroi Ascian",B,5,Final Fantasy Commander,2025,Y,Y
-Elijah Schultz,"Gogo, Mysterious Mime",R,4,Final Fantasy Commander,2025,Y,Y
-Kimberly M,"Gollum, Obsessed Stalker",B,2,Tales of Middle-Earth Commander,2023,Y,Y
-Shaun Riska,"Gonti, Night Minister",B,4,Aetherdrift,2025,N,N
-Nick Samson,"Herigast, Erupting Nullkite",R,9,Modern Horizons 3,2024,N,Y
-Blake Wescom,"Jaxis, the Troublemaker",R,4,Streets of New Capenna,2022,N,N
-Kodie Penn,"Katsumasa, the Animator",U,4,Neon Dynasty Commander,2022,N,Y
-Dan Husen,"Kemba, Kha Regent",W,3,Scars of Mirrodin,2010,N,N
-Elijah Pheiah,"Kosei, Penitent Warlord",G,3,Neon Dynasty Commander,2022,N,Y
-Chase Brenenstall,"Legolas, Master Archer",G,3,The Lord of the Rings: Tales of Middle-earth,2023,Y,Y
-James King,Leonardo da Vinci,U,3,Assassin's Creed,2024,Y,Y
-Simon Riska,"Massacre Girl, Known Killer",B,4,Murders at Karlov Manor,2024,Y,N
-G Giguere,"Moseo, Vein's New Dean",B,3,Secrets of Strixhaven,2026,N,N
-Levi Hartman,"Nev, the Practical Dean",G,3,Secrets of Strixhaven Commander,2026,N,Y
-Stacy Winchell,"Nils, Discipline Enforcer",W,3,Commander 2021,2021,N,Y
-Brian Fierro,"Ob Nixilis, the Fallen",B,5,Zendikar,2009,N,N
-Josh Heindel,"Odric, Lunarch Marshal",W,4,Shadows Over Innistrad,2016,N,N
-Dustin Daon,Old One Eye,G,6,"Warhammer 40,000 Commander",2022,Y,Y
-Hunter,"Orvar, the All-Form",U,4,Kaldheim,2021,N,N
-Ashton Brown,Plargg and Nassari,R,5,March of the Machines: The Aftermath,2023,N,N
-Ellen Coggio,Radagast the Brown,G,4,The Lord of the Rings: Tales of Middle-earth,2023,Y,Y
-Paris Boyd,"Rankle, Master of Pranks",B,4,Throne of Eldraine,2019,N,N
-Vic Mohammad,"Rikku, Resourceful Guardian",U,3,Final Fantasy Commander,2025,Y,Y
-Adin Tjerina,"Shelob, Dread Weaver",B,4,Tales of Middle-Earth Commander,2023,Y,Y
-Adriaan Lagerwaard,"Smellerbee, Rebel Fighter",R,4,Avatar: The Last Airbender Eternal,2025,Y,Y
-Julie Winters,"Stiltzkin, Moogle Merchant",W,1,Final Fantasy,2025,Y,N
-Linus Winters,"Strong, the Brutish Thespian",G,6,Fallout,2024,Y,Y
-Thomas Pelowitz,"Taigam, Master Opportunist",U,2,Tarkir: Dragonstorm,2025,N,N
-Ali Amari,"Teshar, Ancestor's Apostle",W,4,Dominaria,2018,N,N
-Matt Heins,The Capitoline Triad,C,10,Assassin's Creed,2024,Y,Y
-Scott Nigbur,The Mindskinner,U,3,Duskmourn: House of Horror,2024,N,N
-Jason Covalt,"Tromell, Seymour's Butler",G,3,Final Fantasy Commander,2025,Y,Y
-David Sabotta,"Wan Shi Tong, All-Knowing",U,5,Avatar: The Last Airbender Eternal,2025,Y,Y
-Diego Garza,"Yes Man, Personal Securitron",W,3,Fallout,2024,Y,Y
-James Henriksen,"Yue, the Moon Spirit",U,4,Avatar: The Last Airbender,2025,Y,N
-Nate Nelson,Zell Dincht,R,3,Final Fantasy,2025,Y,N
-Ryan Ohl,Zo-Zu the Punisher,R,3,Champions of Kamigawa,2003,N,N
+Player,Commander,Color Identity,CMC,First Printing Set,First Printing Year,Tribe1,Tribe2,Tribe3,Tribe4,UB
+David Huff,"Aeve, Progenitor Ooze",G,5,Modern Horizons 2 Promos,2021,Ooze,,,,No
+Julie Winters,Altair Ibn-La'Ahad,WBR,3,Assassin's Creed,2024,Assassin,,,,Yes
+Scott Stroh,"Anowon, the Ruin Thief",UB,4,Zendikar Rising Commander,2020,Rogue,,,,No
+Emily Fox,"Ayula, Queen Among Bears",G,2,Modern Horizons,2019,Bear,,,,No
+Jalen Long,"Baru, Wurmspeaker",G,4,Dominaria United Commander,2022,Wurm,,,,No
+Brayden Engen,"Brenard, Ginger Sculptor",WUG,4,Wilds of Eldraine Commander,2023,Golem,Food,,,No
+Adin Tjerina,"Brimaz, Blight of Oreskos",WB,4,March of the Machine Commander,2023,Phyrexian,,,,No
+Derek Muthart,"Choco, Seeker of Paradise",WUG,4,Final Fantasy,2025,Bird,,,,Yes
+Wyatt Shones,Commander Mustard,WR,5,Ravnica: Clue Edition,2024,Soldier,,,,No
+Steven Reiman,Dark Leo & Shredder,WB,2,Teenage Mutant Ninja Turtles,2026,Ninja,,,,Yes
+Brett Carlson,Dr. Eggman,UBR,5,Secret Lair Drop,2025,Construct,Robot,Vehicle,,Yes
+Linus Winters,"Etrata, Deadly Fugitive",UB,3,Murders at Karlov Manor,2024,Assassin,,,,No
+Michael McShane,"Evelyn, the Covetous",UBR,5,Streets of New Capenna Promos,2022,Vampire,,,,No
+James King,"Gandalf, Party Guest",WUR,4,The Hobbit Eternal,2023,Wizard,,,,Yes
+Zack Fernholz,"Gargos, Vicious Watcher",G,6,Core Set 2020,2019,Hydra,,,,No
+Nick Krause,General Kudro of Drannith,WB,3,Ikoria: Lair of Behemoths,2020,Human,,,,No
+Ali Amari,"Giada, Font of Hope",W,2,Streets of New Capenna Promos,2022,Angel,,,,No
+Mason Schoeppner,Gisa and Geralf,UB,4,Eldritch Moon,2016,Zombie,,,,No
+Matt Heins,"Glissa, Herald of Predation",BG,5,March of the Machine,2023,Phyrexian,,,,No
+Josh Heindal,"Gornog, the Red Reaper",R,3,Foundations Jumpstart,2024,Warrior,,,,No
+Blake Wescom,"Grolnok, the Omnivore",UG,4,Innistrad: Crimson Vow,2021,Frog,,,,No
+Chase Brenenstall,"Harbin, Vanguard Aviator",WU,2,The Brothers' War,2022,Soldier,,,,No
+Nathan Matthews,"Huatli, Poet of Unity",WRG,3,The Lost Caverns of Ixalan,2023,Dinosaur,,,,No
+G Giguere,"Karumonix, the Rat King",B,3,Phyrexia: All Will Be One,2023,Rat,,,,No
+Jacob Kalmes,"Kastral, the Windcrested",WU,5,Bloomburrow,2024,Bird,,,,No
+Ellen Coggio,"Katara, the Fearless",WUG,3,URL/Convention Promos,2025,Ally,,,,Yes
+Ryan Ohl,Katilda and Lier,WUG,3,March of the Machine Commander,2023,Human,,,,No
+Adriaan Lagerwaard,"Kaza, Roil Chaser",UR,2,Zendikar Rising,2020,Wizard,,,,No
+Shaun Riska,"Kirri, Talented Sprout",WRG,4,Outlaws of Thunder Junction Commander,2024,Plant,Treefolk,,,No
+Eli Lindsey,"Kolodin, Triumph Caster",WR,2,Aetherdrift,2025,Mount,Vehicle,,,No
+Tim Seifert,Khorvath Brightflame / Sylvia Brightspear,WR,9,Battlebond,2018,Dragon,Human,,,No
+Elijah Schultz,"Kuja, Genome Sorcerer",BR,4,Final Fantasy,2025,Wizard,,,,Yes
+Diego Garza,Laughing Jasper Flint,BR,3,Outlaws of Thunder Junction,2024,Outlaw,,,,No
+Jason Egginton,"Leori, Sparktouched Hunter",WUR,3,Commander Masters,2023,Planeswalker,,,,No
+David Sabotta,"Loki, the Deceiver",UBR,4,Marvel Super Heroes Commander,2026,Villain,,,,Yes
+Dan Gusmer,"Mikey & Don, Party Planners",UG,4,Teenage Mutant Ninja Turtles,2026,Mutant,Ninja,Turtle,,Yes
+Brian Fierro,"Orah, Skyclave Hierophant",WB,4,Zendikar Rising,2020,Cleric,,,,No
+Jamie Groby,"Quintorius, History Chaser",WR,4,Secrets of Strixhaven Commander,2026,Spirit,,,,No
+Ryan Aleshire,"Raphael, Fiendish Savior",BR,5,Commander Legends: Battle for Baldur's Gate,2022,Demon,,,,Yes
+Natalie Hagy,Runo Stromkirk,UB,3,Innistrad: Crimson Vow,2021,Kraken,Leviathan,Octopus,Serpent,No
+Jake Scharpen,"Sethron, Hurloon General",BR,5,Jumpstart,2020,Minotaur,,,,No
+Paris Boyd,"Shilgengar, Sire of Famine",WB,5,Modern Horizons 3,2024,Angel,,,,No
+Dustin Doan,Shroofus Sproutsire,G,3,Foundations Jumpstart,2024,Saproling,,,,No
+Nick Samson,"Splinter, Radical Rat",WUB,3,Teenage Mutant Ninja Turtles,2026,Ninja,,,,Yes
+Scott Nigbur,"Strefan, Mauerer Progenitor",BR,4,Crimson Vow Commander,2021,Vampire,,,,No
+Dan Husen,"Tawnos, the Toymaker",UG,5,The Brothers' War,2022,Beast,Bird,,,No
+Hunter McCaffrey,The Archimandrite,WUR,5,The Brothers' War Commander,2022,Advisor,Artificer,Monk,,No
+Kodie Penn,The Destined Warrior,WUB,4,Final Fantasy Commander,2025,Warrior,Rogue,Wizard,Cleric,Yes
+Vic Mohammad,The Lady of Otaria,RG,5,Dominaria United Commander,2022,Dwarf,,,,No
+Levi Hartman,The Mycotyrant,BG,3,The Lost Caverns of Ixalan,2023,Fungus,Saproling,,,No
+Ashton Brown,The Odd Acorn Gang,BG,5,Bloomburrow Commander,2024,Squirrel,,,,No
+Nate Fursa,The Ur-Sphinx,WUB,9,Reality Fracture Commander,2026,Sphinx,,,,No
+Kim Manery,"Treebeard, Gracious Host",WG,4,Tales of Middle-earth Commander,2023,Treefolk,Food,,,Yes
+Eric Welch,"Vihaan, Goldwaker",WBR,3,Outlaws of Thunder Junction Commander,2024,Outlaw,,,,No
+Thomas Pelowitz,"Yuna, Hope of Spira",WG,5,Final Fantasy,2025,Enchantment Creature,,,,Yes

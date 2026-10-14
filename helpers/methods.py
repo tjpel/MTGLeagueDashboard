@@ -78,6 +78,25 @@ def get_recent_games(games_df: pd.DataFrame, limit: int = 10) -> pd.DataFrame:
 
     return recent_games.head(limit).drop(columns=["_source_order"])
 
+def get_opponents_played(games_df: pd.DataFrame) -> dict[str, set]:
+    opponents = {}
+    for _, row in games_df.iterrows():
+        players = [row[col] for col in ["First Place", "Second Place", "Third Place", "Fourth Place"] if row[col]]
+        for player in players:
+            opponents.setdefault(player, set()).update(p for p in players if p != player)
+
+    return opponents
+
+def get_pair_game_counts(games_df: pd.DataFrame) -> dict[tuple, int]:
+    pair_counts = {}
+    for _, row in games_df.iterrows():
+        players = sorted({row[col] for col in ["First Place", "Second Place", "Third Place", "Fourth Place"] if row[col]})
+        for i, player1 in enumerate(players):
+            for player2 in players[i + 1:]:
+                pair_counts[(player1, player2)] = pair_counts.get((player1, player2), 0) + 1
+
+    return pair_counts
+
 
 def get_player_record_against_subgroup(player, player_group, group_name, exact, stringify):
     subgroup_players = get_player_subgroup(player_group, group_name, exact)

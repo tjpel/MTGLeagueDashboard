@@ -7,11 +7,11 @@ from helpers.data_manager import get_data_manager, refresh_data
 from helpers.methods import get_overall_placements, get_recent_games
 
 PLACEMENT_ORDER = ["First Place", "Second Place", "Third Place", "Fourth Place"]
-SEASON = 7
-CURRENT_ISSUE = 4
+SEASON = 8
+CURRENT_ISSUE = None
 refresh_data()
 
-st.title("Midwest Vintage Toys Themed Commander League Season 7")
+st.title("Midwest Vintage Toys Themed Commander League Season 8")
 st.caption("Created by Thomas Pelowitz")
 
 # ---- Standings ----
@@ -62,8 +62,9 @@ if not standings.empty:
 else:
     st.write("Standings will be available once games begin!")
 
-st.title("League Times")
-st.image(f"imgs/season_{SEASON}/issue_{CURRENT_ISSUE}.png", caption=f"Season {SEASON}, League Times Issue {CURRENT_ISSUE}", width='stretch')
+if CURRENT_ISSUE:
+    st.title("League Times")
+    st.image(f"imgs/season_{SEASON}/issue_{CURRENT_ISSUE}.png", caption=f"Season {SEASON}, League Times Issue {CURRENT_ISSUE}", width='stretch')
 
 # ---- Recently Played Games ----
 st.header("Recently Played Games")
@@ -82,7 +83,7 @@ else:
 st.header("Commander Information")
 commander_col = st.selectbox(
     "Pick One",
-    ["CMC", "First Printing Set", "First Printing Year", "UB", "Non-Standard Set"],
+    ["CMC", "First Printing Set", "First Printing Year", "UB"],
 )
 
 temp_vc = (

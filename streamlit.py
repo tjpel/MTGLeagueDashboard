@@ -33,5 +33,12 @@ pages = st.navigation([
         title="About this Site",
         icon=":material/info:"
     ),
+    st.Page(
+        "pages/admin.py",
+        title="Admin",
+        icon=":material/lock:",
+        url_path="admin",
+        visibility="hidden"
+    ),
 ])
 pages.run()

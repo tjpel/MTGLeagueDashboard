@@ -8,9 +8,9 @@ import helpers.constants as c
 data_manager = None
 
 class SheetsAPI():
-    SPREADSHEET_ID = '1LfM6l1_GJa_YnLOHmfb_jz2YaaABL7-_-l7gFgsUBeQ'
-    HEADER = 'Form Responses 4!A1:E1'
-    PLACEMENTS_RANGE = 'Form Responses 4!A335:E10000'
+    SPREADSHEET_ID = '1YhdFnWXgWRSAE30sj0DtoKTUAPhreoN_NYTowyqLqAg'
+    HEADER = 'Form Responses 1!A1:E1'
+    PLACEMENTS_RANGE = 'Form Responses 1!A2:E10000'
     api_key = None
 
     def __init__(self):

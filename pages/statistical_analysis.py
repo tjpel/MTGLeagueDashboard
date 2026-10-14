@@ -32,7 +32,7 @@ total_games = int(df["Games Played"].sum()) if df["Games Played"].notna().all() 
 
 min_games = st.slider(
     "Minimum games played (filter players for stability)",
-    min_value=1,
+    min_value=0,
     max_value=games_max_safe,
     value=1,
 )
@@ -113,7 +113,7 @@ else:
 # ---- Binary predictors ----
 st.subheader("Binary Predictors vs Average Placement")
 
-binary_vars = ["UB", "Non-Standard Set"]
+binary_vars = ["UB"]
 available_binary = [v for v in binary_vars if v in df.columns]
 
 if not available_binary:
@@ -121,7 +121,7 @@ if not available_binary:
 else:
     for var in available_binary:
         df_bin = df[[var, "Average Placement"]].dropna()
-        df_bin = df_bin[df_bin[var].isin(["Y", "N"])]
+        df_bin = df_bin[df_bin[var].isin(["Yes", "No"])]
         if df_bin[var].nunique() < 2:
             st.write(f"Not enough variation in **{var}** for comparison yet.")
             continue
