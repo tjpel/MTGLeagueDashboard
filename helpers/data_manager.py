@@ -7,6 +7,13 @@ import helpers.constants as c
 
 data_manager = None
 
+# Scryfall rate limits: https://scryfall.com/docs/api/rate-limits
+SCRYFALL_USER_AGENT = "LeagueSeason3/1.0"
+SCRYFALL_MIN_INTERVAL = 0.55  # /cards/named allows 2 req/s; small margin on top
+SCRYFALL_BACKOFF_SECONDS = 60  # pause after a 429, as Scryfall's error message requests
+_scryfall_last_request = 0.0
+_scryfall_backoff_until = 0.0
+
 class SheetsAPI():
     SPREADSHEET_ID = '1YhdFnWXgWRSAE30sj0DtoKTUAPhreoN_NYTowyqLqAg'
     HEADER = 'Form Responses 1!A1:E1'
@@ -126,9 +133,22 @@ class DataManager():
             out = player_cmd.copy()
             out["Image"] = None
             return out
+        global _scryfall_backoff_until, _scryfall_last_request
+        # Scryfall asks clients to identify themselves via User-Agent
+        if hasattr(scrython, "set_user_agent"):
+            scrython.set_user_agent(SCRYFALL_USER_AGENT)
         image_by_commander = {}
         for name in commanders_to_fetch:
-            time.sleep(0.2)
+            # After a 429, stop hitting Scryfall until the backoff window passes;
+            # unfetched commanders stay blank and are retried on a later load
+            if time.time() < _scryfall_backoff_until:
+                print(f"Scryfall backoff active; skipping remaining {len(commanders_to_fetch) - len(image_by_commander)} commander(s)")
+                break
+            # /cards/named is limited to 2 requests/second
+            wait = SCRYFALL_MIN_INTERVAL - (time.time() - _scryfall_last_request)
+            if wait > 0:
+                time.sleep(wait)
+            _scryfall_last_request = time.time()
             try:
                 card = scrython.cards.Named(fuzzy=name)
                 raw_uris = getattr(card, "image_uris", None)
@@ -140,6 +160,9 @@ class DataManager():
                 image_by_commander[name] = uris.get("art_crop") if isinstance(uris, dict) else None
             except Exception as e:
                 print(f"Error fetching {name}: {e}")
+                if getattr(e, "status", None) == 429 or "rate-limit" in str(e).lower():
+                    _scryfall_backoff_until = time.time() + SCRYFALL_BACKOFF_SECONDS
+                    break
                 image_by_commander[name] = None
         if existing_df is not None:
             cache = existing_df[["Commander", "Image"]].drop_duplicates("Commander")

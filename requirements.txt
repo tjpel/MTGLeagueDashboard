@@ -2,7 +2,7 @@ streamlit
 plotly
 pandas
 google-api-python-client
-scrython
+scrython>=3.1
 asyncio
 scipy
 statsmodels
