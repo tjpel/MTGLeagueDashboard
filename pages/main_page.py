@@ -68,7 +68,7 @@ if CURRENT_ISSUE:
 
 # ---- Recently Played Games ----
 st.header("Recently Played Games")
-recent_games = get_recent_games(get_data_manager().get_data("Placements by Game"), limit=10)
+recent_games = get_recent_games(get_data_manager().get_data("Placements by Game"), limit=25)
 if not recent_games.empty:
     recent_games = recent_games.copy()
     recent_games["Date"] = recent_games["Timestamp"].dt.strftime("%b %d, %Y")
